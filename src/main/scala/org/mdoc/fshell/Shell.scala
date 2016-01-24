@@ -14,6 +14,14 @@ object Shell {
   def delete(path: Path): Shell[Unit] =
     Free.liftFC(ShellOp.Delete(path))
 
+  def fileExists(path: Path): Shell[Boolean] =
+    Free.liftFC(ShellOp.FileExists(path))
+
+  // derived operations
+
+  def fileNotExists(path: Path): Shell[Boolean] =
+    fileExists(path).map(!_)
+
   // syntax
 
   implicit class ShellSyntax[T](val self: Shell[T]) extends AnyVal {
