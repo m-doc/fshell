@@ -5,8 +5,10 @@ name := "fshell"
 
 organization := "org.m-doc"
 bintrayOrganization := Some("m-doc")
+homepage := Some(url("https://github.com/m-doc/fshell"))
 startYear := Some(2016)
 licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
+scmInfo := Some(ScmInfo(homepage.value.get, "git@github.com:m-doc/fshell.git"))
 
 scalaVersion := "2.11.7"
 crossScalaVersions := Seq("2.11.7", "2.10.6")
