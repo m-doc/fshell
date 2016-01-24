@@ -1,7 +1,7 @@
 package org.mdoc.fshell
 
 import java.nio.file.Path
-import scalaz.{ Monad, Free }
+import scalaz.{ Free, Monad }
 import scalaz.concurrent.Task
 
 object Shell {
