@@ -3,6 +3,7 @@ package org.mdoc.fshell
 import java.nio.file.Path
 import scalaz.{ Free, Monad }
 import scalaz.concurrent.Task
+import scodec.bits.ByteVector
 
 object Shell {
 
@@ -16,6 +17,9 @@ object Shell {
 
   def fileExists(path: Path): Shell[Boolean] =
     Free.liftFC(ShellOp.FileExists(path))
+
+  def readAllBytes(path: Path): Shell[ByteVector] =
+    Free.liftFC(ShellOp.ReadAllBytes(path))
 
   // derived operations
 

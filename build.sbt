@@ -1,7 +1,10 @@
+enablePlugins(BuildInfoPlugin)
+enablePlugins(GitVersioning)
+
 name := "fshell"
 
 organization := "org.m-doc"
-startYear := Some(2015)
+startYear := Some(2016)
 licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 
 scalaVersion := "2.11.7"
@@ -26,5 +29,10 @@ libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.6",
   "org.scalaz" %% "scalaz-concurrent" % "7.1.6",
   "org.scalaz" %% "scalaz-effect" % "7.1.6",
-  "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+  "org.scalacheck" %% "scalacheck" % "1.12.5" % "test",
+  "org.scodec" %% "scodec-bits" % "1.0.12"
 )
+
+publishMavenStyle := true
+
+git.useGitDescribe := true

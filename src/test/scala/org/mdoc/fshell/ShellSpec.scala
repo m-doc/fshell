@@ -7,7 +7,7 @@ import scala.util.Random
 
 class ShellSpec extends Properties("Shell") {
 
-  property("createTempFile Task") = secure {
+  property("createTempFile") = secure {
     val (prefix, suffix) = (Random.nextString(8), Random.nextString(8))
     val p = for {
       path <- Shell.createTempFile(prefix, suffix)
@@ -18,13 +18,22 @@ class ShellSpec extends Properties("Shell") {
     p.runTask.run
   }
 
-  property("delete, fileExists Task") = secure {
+  property("delete, fileExists") = secure {
     val p = for {
       path <- Shell.createTempFile("", "")
       created <- Shell.fileExists(path)
       _ <- Shell.delete(path)
       deleted <- Shell.fileNotExists(path)
     } yield created && deleted
+    p.runTask.run
+  }
+
+  property("readAllBytes empty file") = secure {
+    val p = for {
+      path <- Shell.createTempFile("", "")
+      bytes <- Shell.readAllBytes(path)
+      _ <- Shell.delete(path)
+    } yield bytes.isEmpty
     p.runTask.run
   }
 }

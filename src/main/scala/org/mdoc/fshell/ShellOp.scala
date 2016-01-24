@@ -3,6 +3,7 @@ package org.mdoc.fshell
 import java.nio.file.{ Files, Path }
 import scalaz.{ ~>, Coyoneda }
 import scalaz.concurrent.Task
+import scodec.bits.ByteVector
 
 sealed trait ShellOp[T]
 
@@ -12,6 +13,7 @@ object ShellOp {
   case class CreateTempFile(prefix: String, suffix: String) extends ShellOp[Path]
   case class Delete(path: Path) extends ShellOp[Unit]
   case class FileExists(path: Path) extends ShellOp[Boolean]
+  case class ReadAllBytes(path: Path) extends ShellOp[ByteVector]
 
   val shellOpToTask: ShellOp ~> Task =
     new (ShellOp ~> Task) {
@@ -23,6 +25,8 @@ object ShellOp {
             Task.delay(Files.delete(path))
           case FileExists(path) =>
             Task.delay(Files.exists(path))
+          case ReadAllBytes(path) =>
+            Task.delay(ByteVector.view(Files.readAllBytes(path)))
         }
     }
 }
