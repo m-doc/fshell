@@ -4,3 +4,11 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/cfcfb991c1944703b8aebc34208c642e)](https://www.codacy.com/app/fthomas/fshell)
 [![Join the chat at https://gitter.im/m-doc/general](https://badges.gitter.im/m-doc/general.svg)](https://gitter.im/m-doc/general)
 [![Download](https://api.bintray.com/packages/m-doc/maven/fshell/images/download.svg)](https://bintray.com/m-doc/maven/fshell/_latestVersion)
+
+## Installation
+
+```scala
+resolvers += "m-doc's Bintray" at "https://dl.bintray.com/m-doc/maven"
+
+libraryDependencies += "org.m-doc" %% "fshell" % "<version>"
+```
