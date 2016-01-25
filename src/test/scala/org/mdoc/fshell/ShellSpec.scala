@@ -28,6 +28,16 @@ class ShellSpec extends Properties("Shell") {
     p.runTask.run
   }
 
+  property("isDirectory") = secure {
+    val p = for {
+      path <- Shell.createTempFile("", "")
+      notDir <- Shell.isDirectory(path)
+      isDir <- Shell.isDirectory(path.getParent)
+      _ <- Shell.delete(path)
+    } yield !notDir && isDir
+    p.runTask.run
+  }
+
   property("readAllBytes empty file") = secure {
     val p = for {
       path <- Shell.createTempFile("", "")
