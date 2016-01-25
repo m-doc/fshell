@@ -1,5 +1,6 @@
 package org.mdoc.fshell
 
+import java.io.IOException
 import org.mdoc.fshell.Shell.ShellSyntax
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
@@ -45,5 +46,15 @@ class ShellSpec extends Properties("Shell") {
       _ <- Shell.delete(path)
     } yield bytes.isEmpty
     p.runTask.run
+  }
+
+  property("readProcess") = secure {
+    val p = Shell.readProcess("echo", List("hello", "world")).map(_.out.trim)
+    p.runTask.run ?= "hello world"
+  }
+
+  property("readProcess nonexistent command") = secure {
+    val p = Shell.readProcess("this-command-does-not-exists", List.empty)
+    p.runTask.attemptRun.fold(_.isInstanceOf[IOException], _ => false)
   }
 }

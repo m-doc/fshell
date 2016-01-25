@@ -24,6 +24,9 @@ object Shell {
   def readAllBytes(path: Path): Shell[ByteVector] =
     Free.liftFC(ShellOp.ReadAllBytes(path))
 
+  def readProcess(command: String, args: List[String]): Shell[ProcessResult] =
+    Free.liftFC(ShellOp.ReadProcess(command, args))
+
   // derived operations
 
   def fileNotExists(path: Path): Shell[Boolean] =

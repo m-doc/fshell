@@ -1,6 +1,7 @@
 package org.mdoc.fshell
 
 import java.nio.file.{ Files, Path }
+import scala.sys.process.{ Process, ProcessLogger }
 import scalaz.{ ~>, Coyoneda }
 import scalaz.concurrent.Task
 import scodec.bits.ByteVector
@@ -15,6 +16,7 @@ object ShellOp {
   case class FileExists(path: Path) extends ShellOp[Boolean]
   case class IsDirectory(path: Path) extends ShellOp[Boolean]
   case class ReadAllBytes(path: Path) extends ShellOp[ByteVector]
+  case class ReadProcess(command: String, args: List[String]) extends ShellOp[ProcessResult]
 
   val shellOpToTask: ShellOp ~> Task =
     new (ShellOp ~> Task) {
@@ -34,6 +36,22 @@ object ShellOp {
 
           case ReadAllBytes(path) =>
             Task.delay(ByteVector.view(Files.readAllBytes(path)))
+
+          case ReadProcess(cmd, args) => Task.delay {
+            val outBuf = new StringBuilder
+            val errBuf = new StringBuilder
+            val logger = ProcessLogger(appendTo(outBuf), appendTo(errBuf))
+
+            val command = cmd :: args
+            val status = Process(command).run(logger).exitValue()
+            ProcessResult(command, outBuf.result(), errBuf.result(), status)
+          }
         }
     }
+
+  private def appendTo(sb: StringBuilder)(line: String): Unit = {
+    sb.append(line)
+    sb.append(System.lineSeparator())
+    ()
+  }
 }
