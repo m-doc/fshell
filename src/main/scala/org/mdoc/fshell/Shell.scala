@@ -18,6 +18,9 @@ object Shell {
   def fileExists(path: Path): Shell[Boolean] =
     Free.liftFC(ShellOp.FileExists(path))
 
+  def isDirectory(path: Path): Shell[Boolean] =
+    Free.liftFC(ShellOp.IsDirectory(path))
+
   def readAllBytes(path: Path): Shell[ByteVector] =
     Free.liftFC(ShellOp.ReadAllBytes(path))
 
