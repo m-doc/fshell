@@ -68,7 +68,7 @@ class ShellSpec extends Properties("Shell") {
   }
 
   property("readProcessIn, createDirectory") = secure {
-    val name = "test" + Random.nextInt().abs
+    val name = "test" + math.abs(Random.nextInt())
     val p = for {
       dir <- Shell.createDirectory(Paths.get("./" + name))
       res <- Shell.readProcessIn("pwd", List.empty, dir)
