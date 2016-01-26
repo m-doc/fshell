@@ -1,12 +1,21 @@
 package org.mdoc.fshell
 
 import java.io.IOException
+import java.nio.file.Paths
 import org.mdoc.fshell.Shell.ShellSyntax
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import scala.util.Random
 
 class ShellSpec extends Properties("Shell") {
+
+  property("createParentDirectories") = secure {
+    val p = for {
+      dir <- Shell.createParentDirectories(Paths.get("./file"))
+      created <- Shell.isDirectory(dir)
+    } yield created
+    p.runTask.run
+  }
 
   property("createTempFile") = secure {
     val (prefix, suffix) = (Random.nextString(8), Random.nextString(8))
@@ -56,5 +65,15 @@ class ShellSpec extends Properties("Shell") {
   property("readProcess nonexistent command") = secure {
     val p = Shell.readProcess("this-command-does-not-exists", List.empty)
     p.runTask.attemptRun.fold(_.isInstanceOf[IOException], _ => false)
+  }
+
+  property("readProcessIn, createDirectory") = secure {
+    val name = "test" + Random.nextInt().abs
+    val p = for {
+      dir <- Shell.createDirectory(Paths.get("./" + name))
+      res <- Shell.readProcessIn("pwd", List.empty, dir)
+      _ <- Shell.delete(dir)
+    } yield res.out.contains(name)
+    p.runTask.run
   }
 }

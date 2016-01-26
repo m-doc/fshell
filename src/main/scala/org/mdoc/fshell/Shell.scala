@@ -9,6 +9,12 @@ object Shell {
 
   // constructors
 
+  def createDirectory(dir: Path): Shell[Path] =
+    Free.liftFC(ShellOp.CreateDirectory(dir))
+
+  def createDirectories(dir: Path): Shell[Path] =
+    Free.liftFC(ShellOp.CreateDirectories(dir))
+
   def createTempFile(prefix: String, suffix: String): Shell[Path] =
     Free.liftFC(ShellOp.CreateTempFile(prefix, suffix))
 
@@ -25,9 +31,15 @@ object Shell {
     Free.liftFC(ShellOp.ReadAllBytes(path))
 
   def readProcess(command: String, args: List[String]): Shell[ProcessResult] =
-    Free.liftFC(ShellOp.ReadProcess(command, args))
+    Free.liftFC(ShellOp.ReadProcess(command, args, None))
+
+  def readProcessIn(command: String, args: List[String], workingDir: Path): Shell[ProcessResult] =
+    Free.liftFC(ShellOp.ReadProcess(command, args, Some(workingDir)))
 
   // derived operations
+
+  def createParentDirectories(path: Path): Shell[Path] =
+    createDirectories(path.getParent)
 
   def fileNotExists(path: Path): Shell[Boolean] =
     fileExists(path).map(!_)

@@ -11,17 +11,25 @@ sealed trait ShellOp[T]
 object ShellOp {
   type FreeFunctor[T] = Coyoneda[ShellOp, T]
 
+  case class CreateDirectory(dir: Path) extends ShellOp[Path]
+  case class CreateDirectories(dir: Path) extends ShellOp[Path]
   case class CreateTempFile(prefix: String, suffix: String) extends ShellOp[Path]
   case class Delete(path: Path) extends ShellOp[Unit]
   case class FileExists(path: Path) extends ShellOp[Boolean]
   case class IsDirectory(path: Path) extends ShellOp[Boolean]
   case class ReadAllBytes(path: Path) extends ShellOp[ByteVector]
-  case class ReadProcess(command: String, args: List[String]) extends ShellOp[ProcessResult]
+  case class ReadProcess(command: String, args: List[String], workingDir: Option[Path]) extends ShellOp[ProcessResult]
 
   val shellOpToTask: ShellOp ~> Task =
     new (ShellOp ~> Task) {
       override def apply[T](op: ShellOp[T]): Task[T] =
         op match {
+          case CreateDirectory(dir) =>
+            Task.delay(Files.createDirectory(dir))
+
+          case CreateDirectories(dir) =>
+            Task.delay(Files.createDirectories(dir))
+
           case CreateTempFile(prefix, suffix) =>
             Task.delay(Files.createTempFile(prefix, suffix))
 
@@ -37,21 +45,21 @@ object ShellOp {
           case ReadAllBytes(path) =>
             Task.delay(ByteVector.view(Files.readAllBytes(path)))
 
-          case ReadProcess(cmd, args) => Task.delay {
+          case ReadProcess(cmd, args, dir) => Task.delay {
+            def appendTo(sb: StringBuilder)(line: String): Unit = {
+              sb.append(line)
+              sb.append(System.lineSeparator())
+              ()
+            }
+
             val outBuf = new StringBuilder
             val errBuf = new StringBuilder
             val logger = ProcessLogger(appendTo(outBuf), appendTo(errBuf))
 
             val command = cmd :: args
-            val status = Process(command).run(logger).exitValue()
+            val status = Process(command, dir.map(_.toFile)).run(logger).exitValue()
             ProcessResult(command, outBuf.result(), errBuf.result(), status)
           }
         }
     }
-
-  private def appendTo(sb: StringBuilder)(line: String): Unit = {
-    sb.append(line)
-    sb.append(System.lineSeparator())
-    ()
-  }
 }
