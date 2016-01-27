@@ -1,10 +1,9 @@
 enablePlugins(BuildInfoPlugin)
 enablePlugins(GitVersioning)
+enablePlugins(MdocPlugin)
 
 name := "fshell"
 
-organization := "org.m-doc"
-bintrayOrganization := Some("m-doc")
 homepage := Some(url("https://github.com/m-doc/fshell"))
 startYear := Some(2016)
 licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
