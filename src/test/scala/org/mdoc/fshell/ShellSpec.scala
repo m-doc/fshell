@@ -14,7 +14,7 @@ class ShellSpec extends Properties("Shell") {
       dir <- Shell.createParentDirectories(Paths.get("./file"))
       created <- Shell.isDirectory(dir)
     } yield created
-    p.runTask.run
+    p.yolo
   }
 
   property("createTempFile") = secure {
@@ -25,7 +25,7 @@ class ShellSpec extends Properties("Shell") {
       created <- Shell.fileExists(path)
       _ <- Shell.delete(path)
     } yield created && name.startsWith(prefix) && name.endsWith(suffix)
-    p.runTask.run
+    p.yolo
   }
 
   property("delete, fileExists") = secure {
@@ -35,7 +35,7 @@ class ShellSpec extends Properties("Shell") {
       _ <- Shell.delete(path)
       deleted <- Shell.fileNotExists(path)
     } yield created && deleted
-    p.runTask.run
+    p.yolo
   }
 
   property("isDirectory") = secure {
@@ -45,7 +45,7 @@ class ShellSpec extends Properties("Shell") {
       isDir <- Shell.isDirectory(path.getParent)
       _ <- Shell.delete(path)
     } yield !notDir && isDir
-    p.runTask.run
+    p.yolo
   }
 
   property("readAllBytes empty file") = secure {
@@ -54,12 +54,12 @@ class ShellSpec extends Properties("Shell") {
       bytes <- Shell.readAllBytes(path)
       _ <- Shell.delete(path)
     } yield bytes.isEmpty
-    p.runTask.run
+    p.yolo
   }
 
   property("readProcess") = secure {
     val p = Shell.readProcess("echo", List("hello", "world")).map(_.out.trim)
-    p.runTask.run ?= "hello world"
+    p.yolo ?= "hello world"
   }
 
   property("readProcess nonexistent command") = secure {
@@ -74,6 +74,6 @@ class ShellSpec extends Properties("Shell") {
       res <- Shell.readProcessIn("pwd", List.empty, dir)
       _ <- Shell.delete(dir)
     } yield res.out.contains(name)
-    p.runTask.run
+    p.yolo
   }
 }

@@ -5,7 +5,7 @@ import scalaz.{ Free, Monad }
 import scalaz.concurrent.Task
 import scodec.bits.ByteVector
 
-object Shell {
+object ShellCompanion {
 
   // constructors
 
@@ -49,6 +49,9 @@ object Shell {
   implicit class ShellSyntax[T](val self: Shell[T]) extends AnyVal {
     def runTask: Task[T] =
       Free.runFC(self)(ShellOp.shellOpToTask)
+
+    def yolo: T =
+      runTask.run
   }
 
   // instances

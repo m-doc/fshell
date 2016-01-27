@@ -11,7 +11,6 @@ licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 scmInfo := Some(ScmInfo(homepage.value.get, "git@github.com:m-doc/fshell.git"))
 
 scalaVersion := "2.11.7"
-crossScalaVersions := Seq("2.11.7", "2.10.6")
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -35,6 +34,11 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.12.5" % "test",
   "org.scodec" %% "scodec-bits" % "1.0.12"
 )
+
+val rootPackage = "org.mdoc.fshell"
+initialCommands := s"""
+  import $rootPackage._
+"""
 
 publishMavenStyle := true
 
