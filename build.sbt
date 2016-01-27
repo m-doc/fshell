@@ -4,9 +4,7 @@ enablePlugins(MdocPlugin)
 
 name := "fshell"
 
-homepage := Some(url("https://github.com/m-doc/fshell"))
 startYear := Some(2016)
-licenses += "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 scmInfo := Some(ScmInfo(homepage.value.get, "git@github.com:m-doc/fshell.git"))
 
 scalaVersion := "2.11.7"
@@ -38,7 +36,5 @@ val rootPackage = "org.mdoc.fshell"
 initialCommands := s"""
   import $rootPackage._
 """
-
-publishMavenStyle := true
 
 git.useGitDescribe := true
