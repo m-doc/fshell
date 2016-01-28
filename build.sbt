@@ -1,5 +1,4 @@
 enablePlugins(BuildInfoPlugin)
-enablePlugins(GitVersioning)
 enablePlugins(MdocPlugin)
 
 name := "fshell"
@@ -36,5 +35,3 @@ val rootPackage = "org.mdoc.fshell"
 initialCommands := s"""
   import $rootPackage._
 """
-
-git.useGitDescribe := true
