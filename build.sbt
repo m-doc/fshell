@@ -3,11 +3,11 @@ enablePlugins(MdocPlugin)
 name := "fshell"
 
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.1.6",
-  "org.scalaz" %% "scalaz-concurrent" % "7.1.6",
-  "org.scalaz" %% "scalaz-effect" % "7.1.6",
-  "org.scalacheck" %% "scalacheck" % "1.12.5" % "test",
-  "org.scodec" %% "scodec-bits" % "1.0.12"
+  "org.scalaz" %% "scalaz-core" % Version.scalaz,
+  "org.scalaz" %% "scalaz-concurrent" % Version.scalaz,
+  "org.scalaz" %% "scalaz-effect" % Version.scalaz,
+  "org.scodec" %% "scodec-bits" % Version.scodecBits,
+  "org.scalacheck" %% "scalacheck" % Version.scalacheck % "test"
 )
 
 val rootPackage = "org.mdoc.fshell"
