@@ -8,7 +8,7 @@
 ## Installation
 
 ```scala
-resolvers += "m-doc's Bintray" at "https://dl.bintray.com/m-doc/maven"
+resolvers += "m-doc/maven" at "https://dl.bintray.com/m-doc/maven"
 
 libraryDependencies += "org.m-doc" %% "fshell" % "<version>"
 ```
