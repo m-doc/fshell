@@ -4,9 +4,6 @@ enablePlugins(MdocPlugin)
 name := "fshell"
 
 startYear := Some(2016)
-scmInfo := Some(ScmInfo(homepage.value.get, "git@github.com:m-doc/fshell.git"))
-
-scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.6",
