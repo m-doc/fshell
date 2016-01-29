@@ -9,8 +9,3 @@ libraryDependencies ++= Seq(
   "org.scodec" %% "scodec-bits" % Version.scodecBits,
   "org.scalacheck" %% "scalacheck" % Version.scalacheck % "test"
 )
-
-val rootPackage = "org.mdoc.fshell"
-initialCommands := s"""
-  import $rootPackage._
-"""
