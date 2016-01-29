@@ -1,9 +1,6 @@
-enablePlugins(BuildInfoPlugin)
 enablePlugins(MdocPlugin)
 
 name := "fshell"
-
-startYear := Some(2016)
 
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.1.6",
