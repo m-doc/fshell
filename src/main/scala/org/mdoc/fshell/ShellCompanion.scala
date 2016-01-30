@@ -1,7 +1,7 @@
 package org.mdoc.fshell
 
 import java.nio.file.Path
-import scalaz.{ Free, Monad }
+import scalaz.{ Free, Monad, NonEmptyList }
 import scalaz.concurrent.Task
 import scodec.bits.ByteVector
 
@@ -30,11 +30,11 @@ object ShellCompanion {
   def readAllBytes(path: Path): Shell[ByteVector] =
     Free.liftFC(ShellOp.ReadAllBytes(path))
 
-  def readProcess(command: String, args: List[String]): Shell[ProcessResult] =
-    Free.liftFC(ShellOp.ReadProcess(command, args, None))
+  def readProcess(command: NonEmptyList[String]): Shell[ProcessResult] =
+    Free.liftFC(ShellOp.ReadProcess(command, None))
 
-  def readProcessIn(command: String, args: List[String], workingDir: Path): Shell[ProcessResult] =
-    Free.liftFC(ShellOp.ReadProcess(command, args, Some(workingDir)))
+  def readProcessIn(command: NonEmptyList[String], workingDir: Path): Shell[ProcessResult] =
+    Free.liftFC(ShellOp.ReadProcess(command, Some(workingDir)))
 
   // derived operations
 

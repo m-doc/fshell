@@ -6,6 +6,7 @@ import org.mdoc.fshell.Shell.ShellSyntax
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import scala.util.Random
+import scalaz.NonEmptyList
 
 class ShellSpec extends Properties("Shell") {
 
@@ -58,12 +59,12 @@ class ShellSpec extends Properties("Shell") {
   }
 
   property("readProcess") = secure {
-    val p = Shell.readProcess("echo", List("hello", "world")).map(_.out.trim)
+    val p = Shell.readProcess(NonEmptyList("echo", "hello", "world")).map(_.out.trim)
     p.yolo ?= "hello world"
   }
 
   property("readProcess nonexistent command") = secure {
-    val p = Shell.readProcess("this-command-does-not-exists", List.empty)
+    val p = Shell.readProcess(NonEmptyList("this-command-does-not-exists"))
     p.runTask.attemptRun.fold(_.isInstanceOf[IOException], _ => false)
   }
 
@@ -71,7 +72,7 @@ class ShellSpec extends Properties("Shell") {
     val name = "test" + math.abs(Random.nextInt())
     val p = for {
       dir <- Shell.createDirectory(Paths.get("./" + name))
-      res <- Shell.readProcessIn("pwd", List.empty, dir)
+      res <- Shell.readProcessIn(NonEmptyList("pwd"), dir)
       _ <- Shell.delete(dir)
     } yield res.out.contains(name)
     p.yolo
