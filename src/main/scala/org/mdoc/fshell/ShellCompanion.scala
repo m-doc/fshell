@@ -1,5 +1,6 @@
 package org.mdoc.fshell
 
+import java.io.IOException
 import java.nio.file.Path
 import scalaz.{ Free, Monad, NonEmptyList }
 import scalaz.concurrent.Task
@@ -49,6 +50,9 @@ object ShellCompanion {
   implicit class ShellSyntax[T](val self: Shell[T]) extends AnyVal {
     def runTask: Task[T] =
       Free.runFC(self)(ShellOp.shellOpToTask)
+
+    def throwOnError(implicit ev: T =:= ProcessResult): Shell[T] =
+      self.map { res => if (res.status != 0) throw new IOException(res.toString) else res }
 
     def yolo: T =
       runTask.run

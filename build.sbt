@@ -9,3 +9,8 @@ libraryDependencies ++= Seq(
   "org.scodec" %% "scodec-bits" % Version.scodecBits,
   "org.scalacheck" %% "scalacheck" % Version.scalacheck % "test"
 )
+
+initialCommands += s"""
+  import ${rootPackage.value}.Shell.ShellSyntax
+  import scalaz.NonEmptyList
+"""

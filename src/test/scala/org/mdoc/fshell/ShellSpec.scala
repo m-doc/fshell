@@ -68,6 +68,11 @@ class ShellSpec extends Properties("Shell") {
     p.runTask.attemptRun.fold(_.isInstanceOf[IOException], _ => false)
   }
 
+  property("readProcess non-zero status") = secure {
+    val p = Shell.readProcess(NonEmptyList("sh", "this-command-does-not-exists"))
+    p.map(_.status).yolo != 0 && throws(classOf[IOException])(p.throwOnError.yolo)
+  }
+
   property("readProcessIn, createDirectory") = secure {
     val name = "test" + math.abs(Random.nextInt())
     val p = for {
