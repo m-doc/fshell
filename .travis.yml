@@ -1,3 +1,10 @@
+notifications:
+  webhooks:
+    urls:
+    - https://webhooks.gitter.im/e/13627e9a6e8fa0dec084 # m-doc/general
+    on_success: change
+    on_failure: always
+    on_start: never
 language: scala
 scala:
 - 2.11.7
@@ -16,10 +23,10 @@ script:
 - sbt ++$TRAVIS_SCALA_VERSION validate
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-notifications:
-  webhooks:
-    urls:
-    - https://webhooks.gitter.im/e/13627e9a6e8fa0dec084 # m-doc/general
-    on_success: change
-    on_failure: always
-    on_start: never
+- >
+  [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ] &&
+  sbt ++$TRAVIS_SCALA_VERSION makeBintrayCredentials reload clean publish
+env:
+  global:
+  - secure: UshLzEH3Ta9DM3HMKAkHmm9JcrWVdkmg0oqfa5V1toCDcR+FrOuQhRERprf9oNyUNVGimkR4pwyt7t3DBT33fnrHv23bYSdCwfkKw6dwOWDbPHKnkSXgmqXv896pmfcfLkbOYCHMx1vC6Y0Zrffem+topPCi/sHerVOSyG1KuLBDX/aNpLncFEK9KVqiUW7kMrRqbiw3XPq7lqyPrVLtCPcp2/DB5Bde9BxkvRDjtWDra/LvZBZEmWmEVORckPng9D+LawNgezLio1FGuXatId7oXe1WMS/4QQvI+U1Zd/WHemlCT9or8NptelUfiDD3QSmmjDUNVC1waWSMg8bKjoyYYBkfefZ7zQurXoACF/cM4OKrDs3+q0HRZhUHBAwXTRyTrtTAOe//QeXGGSQOGPNnAQZAzvtWu5bTVwILbbJuW4zwtM6a4yRz6D3LNVnme0q5FnRwzwsCzj4jJzYiPG7x+P32rXUJxrojaw4iCYqEkk2vqv3yAMQCGPbFRD5Gw3HsijDZCltgg1LZ7Y+HUfdasYcTwTda9zrKpB64FyYZBopsr3J7F16wETeblhnPEfX9AsbklVWr3V/3nSRN4kWLTUJiE0CNGUwFyzqryH2Yy4Ydfs0LzHAHQy5TKm94P7bT8MK/mKIbjpnCTicMgdPLzXMtuMu8S3RNROPEITI=
+  - secure: l3aRB0WJmPuLJFzdiO84DCYqfFLo5XksiJyvT1lbXHwRpTgJy/iMGIXGV0JzBG1aQDgSK2U4XIOODeQbeu670FKSZR1XJ44xqqdHh4PSXNuYDCacdHkbZf9N+O2iaEgTMbsAPhW4bpU/PE2t3bDC71NQHv6CbL5QO9SFLIGYI64vV0oKn0oxSaLNl6SHUiy2q+1bm+tzweZztq9Yq1QImUH2/TH92NCmMv76BuSuLGi4USCJSWIb8E3e6Nij0mGDhTHPsyKSe62npx6iOd2pOrNrgiEOTfTAcCM8wzIdCso5DH8VSuydlBEKG2X6ZoKkmOWrRT2/y5bSlGlJCwYGpGiwc78J3JcO2klocwXLYWzyCl8RhROcTo7GgynsxB5mK+onrINwGpau9mCK7tjtUds9V0LMa+mmgF8YEC/DCM2VfE59yWC9jHniwxFfIY5vcZbluOgAMRhOw1fldZyyESiFqmTIVvwFXvxj03D4Eg2j7IostIqv5VPPNm/Gx4rZs4WoAvY/OITTM2l0NdQDcFjnXojSo8TomATNxVnM53KSgXcJdyqBXunoIjPqlAT0taQbAqa1J1aUmu0StHzdlMaUrkNSoqitRAUfuSsfx4uQ+qjg3ZBvvUGp3vkstM20Froy4KRbiLSBVYXLKs039BK23c1gMYD0Bc+F2vGEhtg=
