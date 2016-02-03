@@ -23,7 +23,8 @@ script:
 - sbt ++$TRAVIS_SCALA_VERSION validate
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ] &&
+- >
+  [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ] &&
   sbt ++$TRAVIS_SCALA_VERSION makeBintrayCredentials reload clean publish
 env:
   global:
