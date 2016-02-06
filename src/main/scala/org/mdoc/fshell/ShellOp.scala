@@ -19,6 +19,7 @@ object ShellOp {
   case class IsDirectory(path: Path) extends ShellOp[Boolean]
   case class ReadAllBytes(path: Path) extends ShellOp[ByteVector]
   case class ReadProcess(command: NonEmptyList[String], workingDir: Option[Path]) extends ShellOp[ProcessResult]
+  case class Write(path: Path, bytes: ByteVector) extends ShellOp[Unit]
 
   val shellOpToTask: ShellOp ~> Task =
     new (ShellOp ~> Task) {
@@ -59,6 +60,9 @@ object ShellOp {
             val status = Process(command.list, dir.map(_.toFile)).run(logger).exitValue()
             ProcessResult(command, outBuf.result(), errBuf.result(), status)
           }
+
+          case Write(path, bytes) =>
+            Task.delay { Files.write(path, bytes.toArray); () }
         }
     }
 }

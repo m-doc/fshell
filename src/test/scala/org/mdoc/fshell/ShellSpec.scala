@@ -7,8 +7,9 @@ import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import scala.util.Random
 import scalaz.NonEmptyList
+import scodec.bits.ByteVector
 
-class ShellSpec extends Properties("Shell") {
+object ShellSpec extends Properties("Shell") {
 
   property("createParentDirectories") = secure {
     val p = for {
@@ -81,5 +82,15 @@ class ShellSpec extends Properties("Shell") {
       _ <- Shell.delete(dir)
     } yield res.out.contains(name)
     p.yolo
+  }
+
+  property("writeToTempFile") = secure {
+    val bytes = ByteVector.view(Random.nextString(8).getBytes)
+    val p = for {
+      path <- Shell.writeToTempFile("", "", bytes)
+      read <- Shell.readAllBytes(path)
+      _ <- Shell.delete(path)
+    } yield read
+    p.yolo ?= bytes
   }
 }

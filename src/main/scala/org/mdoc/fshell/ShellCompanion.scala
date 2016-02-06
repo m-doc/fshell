@@ -37,6 +37,9 @@ object ShellCompanion {
   def readProcessIn(command: NonEmptyList[String], workingDir: Path): Shell[ProcessResult] =
     Free.liftFC(ShellOp.ReadProcess(command, Some(workingDir)))
 
+  def write(path: Path, bytes: ByteVector): Shell[Unit] =
+    Free.liftFC(ShellOp.Write(path, bytes))
+
   // derived operations
 
   def createParentDirectories(path: Path): Shell[Path] =
@@ -44,6 +47,9 @@ object ShellCompanion {
 
   def fileNotExists(path: Path): Shell[Boolean] =
     fileExists(path).map(!_)
+
+  def writeToTempFile(prefix: String, suffix: String, bytes: ByteVector): Shell[Path] =
+    createTempFile(prefix, suffix).flatMap(path => write(path, bytes).map(_ => path))
 
   // syntax
 
