@@ -19,6 +19,17 @@ object ShellSpec extends Properties("Shell") {
     p.yolo
   }
 
+  property("createTempDirectory") = secure {
+    val prefix = Random.nextString(8)
+    val p = for {
+      path <- Shell.createTempDirectory(prefix)
+      created <- Shell.isDirectory(path)
+      _ <- Shell.delete(path)
+      deleted <- Shell.isDirectory(path).map(!_)
+    } yield created && deleted
+    p.yolo
+  }
+
   property("createTempFile") = secure {
     val (prefix, suffix) = (Random.nextString(8), Random.nextString(8))
     val p = for {

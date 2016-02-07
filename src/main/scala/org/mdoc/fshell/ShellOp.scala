@@ -13,6 +13,7 @@ object ShellOp {
 
   case class CreateDirectory(dir: Path) extends ShellOp[Path]
   case class CreateDirectories(dir: Path) extends ShellOp[Path]
+  case class CreateTempDirectory(prefix: String) extends ShellOp[Path]
   case class CreateTempFile(prefix: String, suffix: String) extends ShellOp[Path]
   case class Delete(path: Path) extends ShellOp[Unit]
   case class FileExists(path: Path) extends ShellOp[Boolean]
@@ -30,6 +31,9 @@ object ShellOp {
 
           case CreateDirectories(dir) =>
             Task.delay(Files.createDirectories(dir))
+
+          case CreateTempDirectory(prefix) =>
+            Task.delay(Files.createTempDirectory(prefix))
 
           case CreateTempFile(prefix, suffix) =>
             Task.delay(Files.createTempFile(prefix, suffix))

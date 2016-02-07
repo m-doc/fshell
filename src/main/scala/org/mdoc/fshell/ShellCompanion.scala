@@ -16,6 +16,9 @@ object ShellCompanion {
   def createDirectories(dir: Path): Shell[Path] =
     Free.liftFC(ShellOp.CreateDirectories(dir))
 
+  def createTempDirectory(prefix: String): Shell[Path] =
+    Free.liftFC(ShellOp.CreateTempDirectory(prefix))
+
   def createTempFile(prefix: String, suffix: String): Shell[Path] =
     Free.liftFC(ShellOp.CreateTempFile(prefix, suffix))
 
