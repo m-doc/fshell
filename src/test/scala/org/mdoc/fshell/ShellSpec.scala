@@ -51,6 +51,17 @@ object ShellSpec extends Properties("Shell") {
     p.yolo
   }
 
+  property("deleteAll") = secure {
+    val p = for {
+      path1 <- Shell.createTempFile("", "")
+      path2 <- Shell.createTempFile("", "")
+      _ <- Shell.deleteAll(List(path1, path2))
+      deleted1 <- Shell.fileNotExists(path1)
+      deleted2 <- Shell.fileNotExists(path2)
+    } yield deleted1 && deleted2
+    p.yolo
+  }
+
   property("isDirectory") = secure {
     val p = for {
       path <- Shell.createTempFile("", "")

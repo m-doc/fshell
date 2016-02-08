@@ -4,6 +4,8 @@ import java.io.IOException
 import java.nio.file.Path
 import scalaz.{ Free, Monad, NonEmptyList }
 import scalaz.concurrent.Task
+import scalaz.std.list._
+import scalaz.syntax.traverse._
 import scodec.bits.ByteVector
 
 object ShellCompanion {
@@ -47,6 +49,9 @@ object ShellCompanion {
 
   def createParentDirectories(path: Path): Shell[Path] =
     createDirectories(path.getParent)
+
+  def deleteAll(paths: List[Path]): Shell[Unit] =
+    paths.map(delete).sequence_
 
   def fileNotExists(path: Path): Shell[Boolean] =
     fileExists(path).map(!_)
