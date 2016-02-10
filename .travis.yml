@@ -23,9 +23,9 @@ script:
 - sbt ++$TRAVIS_SCALA_VERSION validate
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-- >
+- |
   [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ] &&
-  sbt ++$TRAVIS_SCALA_VERSION makeBintrayCredentials reload clean publish
+  sbt ++$TRAVIS_SCALA_VERSION mdocPublishJar
 env:
   global:
   - secure: NNhOFZXDTNZ1E7c5qiDqMFhJyOljtUd82h/72V/MSaFX9rkEiHAyNk28CyTWWKltraMcjj1oq+S6KwEiExZmQsL1gZBPPDjsQL+zwih15m7aEFeQdZ2tS+PvaHxLk+NSovAAv3vjDDSHBvydcUOVbcoWFykBP6/dAc1VeP40qb/Mr21Y/wPw+6CYDDotxRFlEU2R2iOqGVMni5H7DK7V8pTv91UBe7zcnaHk3jAfHhP4oki1i3Qa4cDjjRVON19PJfjeln0WROP9FQpX8aMD3edMVpjoJ7B1+Z/9QifgMvgDrMfXosVXE06y1SS4BXU6nio/aTMAuEOB7n6DiC083CGNP/BhjwhCUgfMSp5MZDai8TW+wrXcvvQNyMydA02b6iuobdVcDOT3WpueRQ0KE+UuRSpK9pMmjnafuQbvjQzUAWMj564qsjLuw7x8gKsUeqDw4WUa0aUiY1lyFJjhrSx/aKdSutJD97UIlF6vVdPZGkF9vEoHJd1j0W+zVyiJJorlY/qWik6mNi0vjAiVdbvRcqLYi9iFdoDMWCdSS57hdrM9h6iIgGLtSyl02dQjXAl68wfH21QHYKIgDGIecXZaFCQ1hbGiEVJyCLK1VrQuz/s/sxAHXMmu6aniMQTFGevPNG9/7KAhfp2NLTn6PXzso2XDYU0/sYHTsAmOrTI=
