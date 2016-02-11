@@ -4,6 +4,9 @@ import scalaz.NonEmptyList
 
 case class ProcessResult(command: NonEmptyList[String], out: String, err: String, status: Int) {
 
-  def commandString: String =
-    command.list.mkString(" ")
+  def describe: String = s"""
+    |Process "${command.list.mkString(" ")}" exited with status $status
+    |  stdout: $out
+    |  stderr: $err
+  """.stripMargin.trim
 }
