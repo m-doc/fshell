@@ -66,7 +66,7 @@ object ShellCompanion {
       Free.runFC(self)(ShellOp.shellOpToTask)
 
     def throwOnError(implicit ev: T =:= ProcessResult): Shell[T] =
-      self.map { res => if (res.status != 0) throw new IOException(res.toString) else res }
+      self.map { res => if (res.status != 0) throw ProcessException(res) else res }
 
     def yolo: T =
       runTask.run

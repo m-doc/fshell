@@ -93,7 +93,7 @@ object ShellSpec extends Properties("Shell") {
 
   property("readProcess non-zero status") = secure {
     val p = Shell.readProcess(NonEmptyList("sh", "this-command-does-not-exists"))
-    p.map(_.status).yolo != 0 && throws(classOf[IOException])(p.throwOnError.yolo)
+    p.map(_.status).yolo != 0 && throws(classOf[ProcessException])(p.throwOnError.yolo)
   }
 
   property("readProcessIn, createDirectory") = secure {
