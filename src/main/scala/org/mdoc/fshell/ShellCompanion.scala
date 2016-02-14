@@ -1,6 +1,5 @@
 package org.mdoc.fshell
 
-import java.io.IOException
 import java.nio.file.Path
 import scalaz.{ Free, Monad, NonEmptyList }
 import scalaz.concurrent.Task
