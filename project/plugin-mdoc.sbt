@@ -1,4 +1,4 @@
 resolvers += Resolver.url("m-doc/sbt-plugins",
   url("http://dl.bintray.com/content/m-doc/sbt-plugins"))(Resolver.ivyStylePatterns)
 
-addSbtPlugin("org.m-doc" % "sbt-mdoc" % "0.0.0-67-g957ff18")
+addSbtPlugin("org.m-doc" % "sbt-mdoc" % "0.0.0-68-g8a9538f")

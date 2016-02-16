@@ -11,6 +11,6 @@ libraryDependencies ++= Seq(
 )
 
 initialCommands += s"""
-  import ${rootPackage.value}.Shell.ShellSyntax
+  import ${mdocRootPackage.value}.Shell.ShellSyntax
   import scalaz.NonEmptyList
 """

@@ -1,26 +1,18 @@
-notifications:
-  webhooks:
-    urls:
-    - https://webhooks.gitter.im/e/13627e9a6e8fa0dec084 # m-doc/general
-    on_success: change
-    on_failure: always
-    on_start: never
 language: scala
 scala:
 - 2.11.7
 jdk:
 - oraclejdk8
+
 sudo: false
-addons:
-  apt:
-    packages:
-    - graphviz
+
 cache:
   directories:
   - "$HOME/.ivy2/cache"
   - "$HOME/.sbt/boot/"
+
 script:
-- sbt ++$TRAVIS_SCALA_VERSION validate
+- sbt ++$TRAVIS_SCALA_VERSION mdocValidate
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - |
@@ -30,3 +22,11 @@ env:
   global:
   - secure: NNhOFZXDTNZ1E7c5qiDqMFhJyOljtUd82h/72V/MSaFX9rkEiHAyNk28CyTWWKltraMcjj1oq+S6KwEiExZmQsL1gZBPPDjsQL+zwih15m7aEFeQdZ2tS+PvaHxLk+NSovAAv3vjDDSHBvydcUOVbcoWFykBP6/dAc1VeP40qb/Mr21Y/wPw+6CYDDotxRFlEU2R2iOqGVMni5H7DK7V8pTv91UBe7zcnaHk3jAfHhP4oki1i3Qa4cDjjRVON19PJfjeln0WROP9FQpX8aMD3edMVpjoJ7B1+Z/9QifgMvgDrMfXosVXE06y1SS4BXU6nio/aTMAuEOB7n6DiC083CGNP/BhjwhCUgfMSp5MZDai8TW+wrXcvvQNyMydA02b6iuobdVcDOT3WpueRQ0KE+UuRSpK9pMmjnafuQbvjQzUAWMj564qsjLuw7x8gKsUeqDw4WUa0aUiY1lyFJjhrSx/aKdSutJD97UIlF6vVdPZGkF9vEoHJd1j0W+zVyiJJorlY/qWik6mNi0vjAiVdbvRcqLYi9iFdoDMWCdSS57hdrM9h6iIgGLtSyl02dQjXAl68wfH21QHYKIgDGIecXZaFCQ1hbGiEVJyCLK1VrQuz/s/sxAHXMmu6aniMQTFGevPNG9/7KAhfp2NLTn6PXzso2XDYU0/sYHTsAmOrTI=
   - secure: DkqOmXO5EJJya0/osIpKGirl+TOFV1k4CQraMLnPpy5D0NcVLHdqyem95ptpO5j/4Qlh42UkxSwaeCTPjcy6Pb2Y3C7p9aMuARZcVKbgwRebi3jv7Jr6XSrv256BCf2+Tz1yOYJG11RS93ZF0c0q8J44UqMyKWYgEnVpP4jU8DEZ3XGbSYvgb+ZeJm3Qqd9l5M/QBVaKV2Xs9Vkh7A0R/rd2lJlbCv1BvFeGF/JA3Flfpc1Dh4Nq+ItDqO4jjM9Kh0iH4N7K04z2Fxk6Gtivhbh54EhnHLeWXTrqyfMoJMsQtafAiXmWdnsH6uX+lAKUwT+q2Uha+wiF9HnCs9xt9ScStHnZY6mvTvsBNXQCkKyZVvONZKjkqLqcUSHQ7XIGcogqj36eM70x0wdqKledX+l6wK+GlyuvaSizwZB7z7qesy1ctXDeh4UPHicGClo8g4Cdy5SRAonIfAD/nEI9ixaIVRmuBiaJ2xoF5p8hx928Mo5o3USWzTiFzJlV4jWAP+k0LxVOQoEWGDlpivTtzzzYxQ0OZN3xbgHwX+P3A0ilDSg07y3ygBstEGPRZPfZ9iqbEyxI5MXZg0l3IFCl1yuiwJBBjOUzbtFBjVMPDmHRgc+twfpmXsjF0/3m6HHJ/keCDsXzfCrgg/8pveVrXNhpnui03IQI9MTRfUFZKug=
+
+notifications:
+  webhooks:
+    urls:
+    - https://webhooks.gitter.im/e/13627e9a6e8fa0dec084 # m-doc/general
+    on_success: change
+    on_failure: always
+    on_start: never
