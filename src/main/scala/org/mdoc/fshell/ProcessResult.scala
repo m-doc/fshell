@@ -6,7 +6,7 @@ case class ProcessResult(command: NonEmptyList[String], out: String, err: String
 
   def describe: String = s"""
     |Process "${command.list.mkString(" ")}" exited with status $status
-    |  stdout: $out
-    |  stderr: $err
+    |  stdout: ${out.trim}
+    |  stderr: ${err.trim}
   """.stripMargin.trim
 }
