@@ -35,6 +35,9 @@ object ShellCompanion {
   def readAllBytes(path: Path): Shell[ByteVector] =
     Free.liftFC(ShellOp.ReadAllBytes(path))
 
+  def readAllBytesIfFileExists(path: Path): Shell[Option[ByteVector]] =
+    Free.liftFC(ShellOp.ReadAllBytesIfFileExists(path))
+
   def readProcess(command: NonEmptyList[String]): Shell[ProcessResult] =
     Free.liftFC(ShellOp.ReadProcess(command, None))
 
