@@ -81,6 +81,22 @@ object ShellSpec extends Properties("Shell") {
     p.yolo
   }
 
+  property("readAllBytesIfFileExists empty file") = secure {
+    val p = for {
+      path <- Shell.createTempFile("", "")
+      maybeBytes <- Shell.readAllBytesIfFileExists(path)
+      _ <- Shell.delete(path)
+    } yield maybeBytes.isDefined
+    p.yolo
+  }
+
+  property("readAllBytesIfFileExists non-existing file") = secure {
+    val p = for {
+      maybeBytes <- Shell.readAllBytesIfFileExists(Paths.get("asdf"))
+    } yield maybeBytes.isEmpty
+    p.yolo
+  }
+
   property("readProcess") = secure {
     val p = Shell.readProcess(NonEmptyList("echo", "hello", "world")).map(_.out.trim)
     p.yolo ?= "hello world"
