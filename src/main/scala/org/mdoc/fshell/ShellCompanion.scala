@@ -35,9 +35,6 @@ object ShellCompanion {
   def readAllBytes(path: Path): Shell[ByteVector] =
     Free.liftFC(ShellOp.ReadAllBytes(path))
 
-  def readAllBytesIfFileExists(path: Path): Shell[Option[ByteVector]] =
-    Free.liftFC(ShellOp.ReadAllBytesIfFileExists(path))
-
   def readProcess(command: NonEmptyList[String]): Shell[ProcessResult] =
     Free.liftFC(ShellOp.ReadProcess(command, None))
 
@@ -57,6 +54,11 @@ object ShellCompanion {
 
   def fileNotExists(path: Path): Shell[Boolean] =
     fileExists(path).map(!_)
+
+  def readAllBytesIfFileExists(path: Path): Shell[Option[ByteVector]] =
+    fileExists(path).flatMap { exists =>
+      if (exists) readAllBytes(path).map(Some(_)) else Free.point(None)
+    }
 
   def writeToTempFile(prefix: String, suffix: String, bytes: ByteVector): Shell[Path] =
     createTempFile(prefix, suffix).flatMap(path => write(path, bytes).map(_ => path))
