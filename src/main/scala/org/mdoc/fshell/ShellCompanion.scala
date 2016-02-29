@@ -1,8 +1,6 @@
 package org.mdoc.fshell
 
 import java.nio.file.Path
-import org.mdoc.fshell.ShellOp.FilesInDirectory
-
 import scalaz.{ Free, Monad, NonEmptyList }
 import scalaz.concurrent.Task
 import scalaz.std.list._
@@ -30,6 +28,9 @@ object ShellCompanion {
 
   def fileExists(path: Path): Shell[Boolean] =
     Free.liftFC(ShellOp.FileExists(path))
+
+  def filesInDirectory(path: Path, filterForFileEndings: Option[NonEmptyList[String]]): Shell[Seq[Path]] =
+    Free.liftFC(ShellOp.FilesInDirectory(path, filterForFileEndings))
 
   def isDirectory(path: Path): Shell[Boolean] =
     Free.liftFC(ShellOp.IsDirectory(path))
@@ -64,9 +65,6 @@ object ShellCompanion {
 
   def writeToTempFile(prefix: String, suffix: String, bytes: ByteVector): Shell[Path] =
     createTempFile(prefix, suffix).flatMap(path => write(path, bytes).map(_ => path))
-
-  def filesInDirectory(path: Path, filterForFileEndings: Option[NonEmptyList[String]]): Shell[Seq[Path]] =
-    Free.liftFC(ShellOp.FilesInDirectory(path, filterForFileEndings))
 
   // syntax
 
