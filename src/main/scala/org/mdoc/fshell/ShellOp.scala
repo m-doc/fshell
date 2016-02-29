@@ -22,6 +22,7 @@ object ShellOp {
   case class ReadAllBytesIfFileExists(path: Path) extends ShellOp[Option[ByteVector]]
   case class ReadProcess(command: NonEmptyList[String], workingDir: Option[Path]) extends ShellOp[ProcessResult]
   case class Write(path: Path, bytes: ByteVector) extends ShellOp[Unit]
+  case class FilesInDirectory(path: Path, filterForFileEndings: Option[NonEmptyList[String]]) extends ShellOp[Seq[Path]]
 
   val shellOpToTask: ShellOp ~> Task =
     new (ShellOp ~> Task) {
@@ -71,6 +72,19 @@ object ShellOp {
 
           case Write(path, bytes) =>
             Task.delay { Files.write(path, bytes.toArray); () }
+
+          case FilesInDirectory(path, filterForFileEndings) =>
+            Task.delay {
+              val supportedFormatsFilterString =
+                filterForFileEndings.map(_.list.foldLeft("*.{")((z, ext) => z + ext + ",") + "}").getOrElse("*")
+              val files = java.nio.file.Files.newDirectoryStream(path, supportedFormatsFilterString)
+              try {
+                import scala.collection.JavaConversions._
+                files.iterator().toSeq.sortBy(_.getFileName.toString)
+              } finally {
+                files.close()
+              }
+            }
         }
     }
 }

@@ -2,6 +2,8 @@ package org.mdoc.fshell
 
 import java.io.IOException
 import java.nio.file.Paths
+import java.util
+import java.util.UUID
 import org.mdoc.fshell.Shell.ShellSyntax
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
@@ -130,5 +132,28 @@ object ShellSpec extends Properties("Shell") {
       _ <- Shell.delete(path)
     } yield read
     p.yolo ?= bytes
+  }
+
+  property("filesInDirectory unfiltered") = secure {
+    val p = for {
+      path1 <- Shell.createTempFile(Random.nextString(5), "." + Random.nextString(3))
+      path2 <- Shell.createTempFile(Random.nextString(5), "." + Random.nextString(3))
+      found <- Shell.filesInDirectory(path1.getParent, None)
+      _ <- Shell.deleteAll(List(path1, path2))
+    } yield found.contains(path1) && found.contains(path2)
+    p.yolo
+  }
+
+  property("filesInDirectory filtered") = secure {
+    val suffix1 = Random.nextString(3)
+    val suffix2 = Random.nextString(3)
+    val p = for {
+      path1 <- Shell.createTempFile(Random.nextString(5), "." + suffix1)
+      path2 <- Shell.createTempFile(Random.nextString(5), "." + suffix2)
+      path3 <- Shell.createTempFile(Random.nextString(5), "." + Random.nextString(3))
+      found <- Shell.filesInDirectory(path1.getParent, Some(NonEmptyList(suffix1, suffix2)))
+      _ <- Shell.deleteAll(List(path1, path2, path3))
+    } yield found.contains(path1) && found.contains(path2) && !found.contains(path3)
+    p.yolo
   }
 }
