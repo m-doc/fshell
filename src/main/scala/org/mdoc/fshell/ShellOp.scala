@@ -17,11 +17,11 @@ object ShellOp {
   case class CreateTempFile(prefix: String, suffix: String) extends ShellOp[Path]
   case class Delete(path: Path) extends ShellOp[Unit]
   case class FileExists(path: Path) extends ShellOp[Boolean]
+  case class FilesInDirectory(dir: Path, filterForFileEndings: Option[NonEmptyList[String]]) extends ShellOp[Seq[Path]]
   case class IsDirectory(path: Path) extends ShellOp[Boolean]
   case class ReadAllBytes(path: Path) extends ShellOp[ByteVector]
   case class ReadProcess(command: NonEmptyList[String], workingDir: Option[Path]) extends ShellOp[ProcessResult]
   case class Write(path: Path, bytes: ByteVector) extends ShellOp[Unit]
-  case class FilesInDirectory(path: Path, filterForFileEndings: Option[NonEmptyList[String]]) extends ShellOp[Seq[Path]]
 
   val shellOpToTask: ShellOp ~> Task =
     new (ShellOp ~> Task) {
@@ -44,6 +44,19 @@ object ShellOp {
 
           case FileExists(path) =>
             Task.delay(Files.exists(path))
+
+          case FilesInDirectory(path, filterForFileEndings) =>
+            Task.delay {
+              val supportedFormatsFilterString =
+                filterForFileEndings.fold("*")(_.list.mkString("*.{", ",", "}"))
+              val files = Files.newDirectoryStream(path, supportedFormatsFilterString)
+              try {
+                import scala.collection.JavaConversions._
+                files.iterator().toSeq.sortBy(_.getFileName.toString)
+              } finally {
+                files.close()
+              }
+            }
 
           case IsDirectory(path) =>
             Task.delay(Files.isDirectory(path))
@@ -68,19 +81,6 @@ object ShellOp {
 
           case Write(path, bytes) =>
             Task.delay { Files.write(path, bytes.toArray); () }
-
-          case FilesInDirectory(path, filterForFileEndings) =>
-            Task.delay {
-              val supportedFormatsFilterString =
-                filterForFileEndings.map(_.list.foldLeft("*.{")((z, ext) => z + ext + ",") + "}").getOrElse("*")
-              val files = java.nio.file.Files.newDirectoryStream(path, supportedFormatsFilterString)
-              try {
-                import scala.collection.JavaConversions._
-                files.iterator().toSeq.sortBy(_.getFileName.toString)
-              } finally {
-                files.close()
-              }
-            }
         }
     }
 }
