@@ -19,7 +19,6 @@ object ShellOp {
   case class FileExists(path: Path) extends ShellOp[Boolean]
   case class IsDirectory(path: Path) extends ShellOp[Boolean]
   case class ReadAllBytes(path: Path) extends ShellOp[ByteVector]
-  case class ReadAllBytesIfFileExists(path: Path) extends ShellOp[Option[ByteVector]]
   case class ReadProcess(command: NonEmptyList[String], workingDir: Option[Path]) extends ShellOp[ProcessResult]
   case class Write(path: Path, bytes: ByteVector) extends ShellOp[Unit]
   case class FilesInDirectory(path: Path, filterForFileEndings: Option[NonEmptyList[String]]) extends ShellOp[Seq[Path]]
@@ -51,9 +50,6 @@ object ShellOp {
 
           case ReadAllBytes(path) =>
             Task.delay(ByteVector.view(Files.readAllBytes(path)))
-
-          case ReadAllBytesIfFileExists(path) =>
-            Task.delay(if (Files.exists(path)) Some(ByteVector.view(Files.readAllBytes(path))) else None)
 
           case ReadProcess(command, dir) => Task.delay {
             def appendTo(sb: StringBuilder)(line: String): Unit = {
