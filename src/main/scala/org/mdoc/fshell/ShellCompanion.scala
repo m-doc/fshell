@@ -53,7 +53,7 @@ object ShellCompanion {
     createDirectories(path.getParent)
 
   def deleteAll(paths: List[Path]): Shell[Unit] =
-    paths.map(delete).sequence_
+    paths.traverse_(delete)
 
   def fileNotExists(path: Path): Shell[Boolean] =
     fileExists(path).map(!_)
