@@ -2,7 +2,7 @@ package org.mdoc.fshell
 
 import java.nio.file.{ Files, Path }
 import scala.sys.process.{ Process, ProcessLogger }
-import scalaz.{ ~>, Coyoneda, NonEmptyList }
+import scalaz.{ ~>, Coyoneda, NonEmptyList, State }
 import scalaz.concurrent.Task
 import scodec.bits.ByteVector
 
@@ -82,5 +82,12 @@ object ShellOp {
           case Write(path, bytes) =>
             Task.delay { Files.write(path, bytes.toArray); () }
         }
+    }
+
+  type Trace[A] = State[Vector[ShellOp[_]], A]
+  val shellOpToTrace: ShellOp ~> Trace =
+    new (ShellOp ~> Trace) {
+      override def apply[A](op: ShellOp[A]): Trace[A] =
+        State.modify((_: Vector[ShellOp[_]]) :+ op).map(_ => null.asInstanceOf[A])
     }
 }

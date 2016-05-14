@@ -75,6 +75,11 @@ object ShellCompanion {
     def throwOnError(implicit ev: T =:= ProcessResult): Shell[T] =
       self.map { res => if (res.status != 0) throw ProcessException(res) else res }
 
+    def trace: Vector[ShellOp[_]] = {
+      val state = Free.runFC(self)(ShellOp.shellOpToTrace)
+      state.run(Vector.empty)._1
+    }
+
     def yolo: T =
       runTask.run
   }

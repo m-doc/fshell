@@ -2,9 +2,8 @@ package org.mdoc.fshell
 
 import java.io.IOException
 import java.nio.file.Paths
-import java.util
-import java.util.UUID
 import org.mdoc.fshell.Shell.ShellSyntax
+import org.mdoc.fshell.ShellOp.{ CreateTempDirectory, Delete }
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import scala.util.Random
@@ -155,5 +154,14 @@ object ShellSpec extends Properties("Shell") {
       _ <- Shell.deleteAll(List(path1, path2, path3))
     } yield found.contains(path1) && found.contains(path2) && !found.contains(path3)
     p.yolo
+  }
+
+  property("test trace") = secure {
+    val p = for {
+      tmp <- Shell.createTempDirectory("abc")
+      _ <- Shell.delete(tmp)
+    } yield ()
+
+    p.trace ?= Vector(CreateTempDirectory("abc"), Delete(null))
   }
 }
